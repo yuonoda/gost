@@ -2,10 +2,10 @@ package user
 
 type name string
 
-func (n name) String() string {
+func (n name) string() string {
 	return string(n)
 }
 
-func NewName(str string) name {
+func newName(str string) name {
 	return name(str)
 }
