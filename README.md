@@ -1,2 +1,2 @@
-# gost
-Go project boilerplate with my best practics
+# Gost
+Web application boilerplate with my best practices
