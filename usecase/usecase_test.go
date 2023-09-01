@@ -2,6 +2,7 @@ package usecase_test
 
 import (
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"gost/domain/user"
 	"gost/usecase"
 	"testing"
@@ -32,14 +33,13 @@ func TestUsecase_CreateUser(t *testing.T) {
 				userRepoFunc: func(t *testing.T) usecase.Repository {
 					return &usecase.RepositoryMock{
 						SaveUserFunc: func(userParam user.User) (user.User, error) {
-							newUser := userParam.SetID(1)
-							return newUser, nil
+							return userParam, nil
 						},
 					}
 				},
 			},
 			want: usecase.UserDTO{
-				ID:   1,
+				ID:   "xxx",
 				Name: "test",
 			},
 		},
@@ -51,7 +51,10 @@ func TestUsecase_CreateUser(t *testing.T) {
 			}
 			got, _ := u.CreateUser(tt.args.dto)
 			// TODO エラー判定のベストプラクティス
-			if diff := cmp.Diff(got, tt.want); diff != "" {
+			opts := cmp.Options{
+				cmpopts.IgnoreFields(usecase.UserDTO{}, "ID"),
+			}
+			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("Usecase.CreateUser() = %v, want %v", got, tt.want)
 			}
 		})

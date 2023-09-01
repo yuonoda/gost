@@ -1,6 +1,6 @@
 package usecase
 
 type UserDTO struct {
-	ID   uint64
+	ID   string
 	Name string
 }
