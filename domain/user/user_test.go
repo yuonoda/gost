@@ -1,10 +1,10 @@
-package user_test
+package user
 
 import (
 	"errors"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/uuid"
 	"gost/domain"
-	"gost/domain/user"
 	"testing"
 )
 
@@ -14,11 +14,12 @@ func TestNew(t *testing.T) {
 	type args struct {
 		idStr   string
 		nameStr string
+		role    int
 	}
 	tests := []struct {
 		name      string
 		args      args
-		want      user.User
+		want      User
 		wantError error
 	}{
 		{
@@ -26,14 +27,13 @@ func TestNew(t *testing.T) {
 			args: args{
 				idStr:   uuid1,
 				nameStr: "test",
+				role:    1,
 			},
-			want: (func() user.User {
-				u, err := user.New(uuid1, "test")
-				if err != nil {
-					t.Fatal(err)
-				}
-				return u
-			})(),
+			want: User{
+				id:   id(uuid.MustParse(uuid1)),
+				name: name("test"),
+				role: admin,
+			},
 			wantError: nil,
 		},
 		{
@@ -42,15 +42,15 @@ func TestNew(t *testing.T) {
 				idStr:   "xxx",
 				nameStr: "test",
 			},
-			want:      user.User{},
+			want:      User{},
 			wantError: domain.InternalError{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := user.New(tt.args.idStr, tt.args.nameStr)
+			got, err := New(tt.args.idStr, tt.args.nameStr, tt.args.role)
 			opts := cmp.Options{
-				cmp.AllowUnexported(user.User{}),
+				cmp.AllowUnexported(User{}),
 			}
 			if diff := cmp.Diff(tt.want, got, opts); diff != "" {
 				t.Errorf("diff: %v", diff)
