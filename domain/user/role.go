@@ -4,6 +4,10 @@ import "gost/domain"
 
 type role int
 
+func (r role) int() int {
+	return int(r)
+}
+
 const (
 	normal role = iota
 	admin  role = iota

@@ -9,7 +9,7 @@ type Usecase struct {
 func (uc *Usecase) CreateUser(dto UserDTO) (UserDTO, error) {
 	u, err := user.Create(dto.Name)
 	if err != nil {
-		return UserDTO{}, err
+		return UserDTO{}, err // TODO ユースケースエラーへの変換？
 	}
 	saved, err := uc.Repo.SaveUser(u)
 	if err != nil {
@@ -18,5 +18,6 @@ func (uc *Usecase) CreateUser(dto UserDTO) (UserDTO, error) {
 	return UserDTO{
 		ID:   saved.ID(),
 		Name: saved.Name(),
+		Role: saved.Role(),
 	}, nil
 }

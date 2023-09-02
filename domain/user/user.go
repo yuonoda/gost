@@ -53,3 +53,7 @@ func (u User) SetID(s string) (User, error) {
 func (u User) ID() string {
 	return u.id.string()
 }
+
+func (u User) Role() int {
+	return u.role.int()
+}
