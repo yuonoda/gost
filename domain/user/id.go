@@ -10,8 +10,12 @@ func (id id) string() string {
 	return uuid.UUID(id).String()
 }
 
-func newID(str string) id {
-	return id(uuid.MustParse(str))
+func newID(str string) (id, error) {
+	parsed, err := uuid.Parse(str)
+	if err == nil {
+		return id(uuid.Nil), nil
+	}
+	return id(parsed), nil
 }
 
 func genID() (id, error) {

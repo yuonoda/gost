@@ -23,7 +23,13 @@ func TestNew(t *testing.T) {
 				idStr:   uuid1,
 				nameStr: "test",
 			},
-			want: user.New(uuid1, "test"),
+			want: (func() user.User {
+				u, err := user.New(uuid1, "test")
+				if err != nil {
+					t.Fatal(err)
+				}
+				return u
+			})(),
 		},
 		{
 			name: "pass - idStr is empty",
@@ -31,18 +37,26 @@ func TestNew(t *testing.T) {
 				idStr:   "",
 				nameStr: "test",
 			},
-			want: user.New("", "test"),
+			want: (func() user.User {
+				u, err := user.New(uuid1, "test")
+				if err != nil {
+					t.Fatal(err)
+				}
+				return u
+			})(),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := user.New(tt.args.idStr, tt.args.nameStr)
+			got, _ := user.New(tt.args.idStr, tt.args.nameStr)
+			// TODO エラー判定
 			opts := cmp.Options{
 				cmp.AllowUnexported(user.User{}),
 			}
 			if diff := cmp.Diff(tt.want, got, opts); diff != "" {
 				t.Errorf("diff: %v", diff)
 			}
+
 		})
 	}
 }
