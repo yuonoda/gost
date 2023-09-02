@@ -1,5 +1,7 @@
 package user
 
+import "fmt"
+
 type User struct {
 	id   id
 	name name
@@ -9,9 +11,8 @@ func New(idStr string, nameStr string) (User, error) {
 	// TODO ここでidStrが空文字の場合にuuidを生成するようにしたい
 	newId, err := newID(idStr)
 	if err != nil {
-		return User{}, err
+		return User{}, fmt.Errorf("failed to create user: %w", err)
 	}
-
 	return User{
 		id:   newId,
 		name: newName(nameStr),
