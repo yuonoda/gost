@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"errors"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"gost/domain/user"
@@ -17,10 +18,11 @@ func TestUsecase_CreateUser(t *testing.T) {
 		dto usecase.UserDTO
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   usecase.UserDTO
+		name    string
+		fields  fields
+		args    args
+		want    usecase.UserDTO
+		wantErr error
 	}{
 		{
 			name: "pass",
@@ -42,6 +44,7 @@ func TestUsecase_CreateUser(t *testing.T) {
 				ID:   "xxx",
 				Name: "test",
 			},
+			wantErr: nil,
 		},
 	}
 	for _, tt := range tests {
@@ -49,13 +52,15 @@ func TestUsecase_CreateUser(t *testing.T) {
 			u := usecase.Usecase{
 				Repo: tt.fields.userRepoFunc(t),
 			}
-			got, _ := u.CreateUser(tt.args.dto)
-			// TODO エラー判定のベストプラクティス
+			got, err := u.CreateUser(tt.args.dto)
 			opts := cmp.Options{
 				cmpopts.IgnoreFields(usecase.UserDTO{}, "ID"),
 			}
 			if diff := cmp.Diff(got, tt.want, opts); diff != "" {
 				t.Errorf("Usecase.CreateUser() = %v, want %v", got, tt.want)
+			}
+			if !errors.Is(tt.wantErr, err) {
+				t.Errorf("Usecase.CreateUser() error = %v, wantErr %v", got, tt.want)
 			}
 		})
 	}

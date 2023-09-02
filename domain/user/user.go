@@ -7,8 +7,20 @@ type User struct {
 	name name
 }
 
+// Create brand-new user with generated ID
+func Create(nameStr string) (User, error) {
+	newId, err := genID()
+	if err != nil {
+		return User{}, fmt.Errorf("failed to create user: %w", err)
+	}
+	return User{
+		id:   newId,
+		name: newName(nameStr),
+	}, nil
+}
+
+// New is constructor of User
 func New(idStr string, nameStr string) (User, error) {
-	// TODO ここでidStrが空文字の場合にuuidを生成するようにしたい
 	newId, err := newID(idStr)
 	if err != nil {
 		return User{}, fmt.Errorf("failed to create user: %w", err)
