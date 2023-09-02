@@ -12,6 +12,10 @@ func (e InternalError) Error() string {
 
 type ValidationError struct{}
 
+func NewValidationError() error {
+	return ValidationError{}
+}
+
 func (e ValidationError) Error() string {
 	return "Validation Error"
 }

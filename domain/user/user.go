@@ -5,6 +5,7 @@ import "fmt"
 type User struct {
 	id   id
 	name name
+	role role
 }
 
 // Create brand-new user with generated ID
@@ -20,14 +21,19 @@ func Create(nameStr string) (User, error) {
 }
 
 // New is constructor of User
-func New(idStr string, nameStr string) (User, error) {
+func New(idStr string, nameStr string, roleInt int) (User, error) {
 	newId, err := newID(idStr)
+	if err != nil {
+		return User{}, fmt.Errorf("failed to create user: %w", err)
+	}
+	r, err := newRole(roleInt)
 	if err != nil {
 		return User{}, fmt.Errorf("failed to create user: %w", err)
 	}
 	return User{
 		id:   newId,
 		name: newName(nameStr),
+		role: r,
 	}, nil
 }
 
