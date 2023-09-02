@@ -1,2 +1,2 @@
 # Gost
-Web application boilerplate with my best practices
+Sample Web application with my best practices
