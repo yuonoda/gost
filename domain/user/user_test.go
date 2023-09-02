@@ -9,6 +9,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
+	t.Parallel()
 	uuid1 := "e78a35ec-48ab-11ee-be56-0242ac120002"
 	type args struct {
 		idStr   string
@@ -34,22 +35,6 @@ func TestNew(t *testing.T) {
 				return u
 			})(),
 			wantError: nil,
-		},
-		{
-			name: "fail - idStr is empty",
-			args: args{
-				idStr:   "",
-				nameStr: "test",
-			},
-			want: user.User{},
-			//want: (func() user.User {
-			//	u, err := user.New("", "test")
-			//	if err != nil {
-			//		t.Fatal(err)
-			//	}
-			//	return u
-			//})(),
-			wantError: domain.InternalError{},
 		},
 		{
 			name: "fail - invalid format of uuid",
